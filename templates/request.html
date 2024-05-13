@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Request</title>
+    </head>
+    <body>
+        <h1>Request for {{ space.address }}</h1>
+
+
+        <div>
+            <div class="request_info">
+                <h2 id="guest_email">From: {{ guest.email }}</h2>
+                <p id="request_date">Date: {{ booking.booking_date }}</p>
+                <p id="space_price">Price: £{{ space.price }}</p>
+            </div>
+            <form action="/request/{{ booking.id }}" method="post">
+                <button class="choice" type="submit" name="booking_status" value="approved">Approve</button>
+                <button class="choice" type="submit" name="booking_status" value="denied">Deny</button>
+            </form>
+            <h2>Other requests for this space</h2>
+            {% for request in other_requests %}
+            <div class="request">
+                <p id="request_date">{{ request.booking_date }}</p>
+                <p id="request_status">{{ request.booking_status }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>
+

@@ -17,7 +17,7 @@ class BookingRepository:
 
     def find(self, id):
         rows = self._connection.execute(
-            'SELECT * from bookings WHERE id = %s', [id])
+            'SELECT * FROM bookings WHERE id = %s', [id])
         row = rows[0]
 
         return Booking(row["id"], row["host_id"], row["guest_id"], row["space_id"], row["booking_date"], row["booking_status"])
@@ -29,14 +29,18 @@ class BookingRepository:
         booking.id = row["id"]
         return booking
 
+    def update(self, id, status):
+        self._connection.execute('UPDATE bookings SET booking_status=%s WHERE id=%s', [status, id])
+        return None
+
     def delete(self, id):
         self._connection.execute(
             'DELETE FROM bookings WHERE id = %s', [id])
         return None
-    
+
     def find_by_guest_id(self, id):
         rows = self._connection.execute(
-            'SELECT * from bookings WHERE guest_id = %s', [id])
+            'SELECT * FROM bookings WHERE guest_id = %s', [id])
         bookings = []
 
         for row in rows:
@@ -44,10 +48,10 @@ class BookingRepository:
             bookings.append(booking)
 
         return bookings
-    
+
     def find_by_host_id(self, id):
         rows = self._connection.execute(
-            'SELECT * from bookings WHERE host_id = %s', [id])
+            'SELECT * FROM bookings WHERE host_id = %s', [id])
         bookings = []
 
         for row in rows:
@@ -56,3 +60,19 @@ class BookingRepository:
 
         return bookings
 
+    def find_by_space_id(self, space_id_to_find):
+        query = self._connection.execute(
+            "SELECT * FROM bookings WHERE space_id = %s",
+            [space_id_to_find]
+            )
+        return [
+            Booking(
+                row["id"],
+                row["host_id"],
+                row["guest_id"],
+                row["space_id"],
+                row["booking_date"],
+                row["booking_status"]
+                )
+            for row in query
+            ]
